@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Dashboard</title>
+<style>
+body { font-family: Arial; background:#f4f4f4;}
+table { width:90%; margin:auto; border-collapse:collapse; background:white;}
+th,td { padding:10px; border:1px solid #ddd; text-align:center;}
+th { background:#333; color:white;}
+a { display:block; text-align:center; margin:10px;}
+</style>
+</head>
+<body>
+
+<h1 style="text-align:center;">Prediction History</h1>
+
+<a href="/">Back</a>
+<a href="/logout">Logout</a>
+
+<table>
+<tr><th>ID</th><th>Customer</th><th>Prediction</th><th>Probability</th></tr>
+{% for row in data %}
+<tr>
+<td>{{ row.id }}</td>
+<td>{{ row.customerID }}</td>
+<td>{{ row.churn_pred }}</td>
+<td>{{ row.churn_prob }}</td>
+</tr>
+{% endfor %}
+</table>
+
+</body>
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Churn Prediction</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    margin: 0;
+}
+
+/* HEADER */
+.header {
+    text-align: center;
+    color: white;
+    padding: 20px;
+}
+
+/* NAV */
+.nav {
+    text-align: center;
+    margin-bottom: 10px;
+}
+.nav a {
+    color: white;
+    margin: 0 10px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* CARD */
+.card {
+    width: 85%;
+    margin: auto;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+
+/* FORM GRID */
+form {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+input, select {
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+}
+
+/* BUTTON */
+button {
+    grid-column: span 3;
+    padding: 12px;
+    background: #00c853;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+}
+
+/* RESULT CARD */
+.result-card {
+    margin-top: 20px;
+    text-align: center;
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+}
+
+/* CHARTS */
+.chart-box {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 20px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+    <h1>Customer Churn Prediction</h1>
+</div>
+
+<div class="nav">
+    <a href="/dashboard">Dashboard</a>
+    <a href="/logout">Logout</a>
+</div>
+
+<div class="card">
+
+<form action="/predict" method="POST">
+
+<input name="customerID" placeholder="Customer ID" required>
+
+<select name="gender">
+<option>Male</option><option>Female</option>
+</select>
+
+<select name="SeniorCitizen">
+<option value="0">No</option><option value="1">Yes</option>
+</select>
+
+<select name="Partner"><option>Yes</option><option>No</option></select>
+<select name="Dependents"><option>Yes</option><option>No</option></select>
+<input name="tenure" placeholder="Tenure">
+
+<select name="PhoneService"><option>Yes</option><option>No</option></select>
+<select name="MultipleLines"><option>Yes</option><option>No</option></select>
+
+<select name="InternetService">
+<option>DSL</option><option>Fiber optic</option><option>No</option>
+</select>
+
+<select name="OnlineSecurity"><option>Yes</option><option>No</option></select>
+<select name="OnlineBackup"><option>Yes</option><option>No</option></select>
+<select name="DeviceProtection"><option>Yes</option><option>No</option></select>
+
+<select name="TechSupport"><option>Yes</option><option>No</option></select>
+<select name="StreamingTV"><option>Yes</option><option>No</option></select>
+<select name="StreamingMovies"><option>Yes</option><option>No</option></select>
+
+<select name="Contract">
+<option>Month-to-month</option>
+<option>One year</option>
+<option>Two year</option>
+</select>
+
+<select name="PaperlessBilling"><option>Yes</option><option>No</option></select>
+
+<select name="PaymentMethod">
+<option>Electronic check</option>
+<option>Mailed check</option>
+<option>Bank transfer</option>
+<option>Credit card</option>
+</select>
+
+<input name="MonthlyCharges" placeholder="Monthly Charges">
+<input name="TotalCharges" placeholder="Total Charges">
+
+<button>Predict</button>
+
+</form>
+
+{% if result %}
+
+<div class="result-card">
+
+<h2>{{ result }}</h2>
+<h3>{{ probability }}%</h3>
+
+<div class="chart-box">
+
+<div style="width:260px;">
+<canvas id="barChart"></canvas>
+</div>
+
+<div style="width:220px;">
+<canvas id="pieChart"></canvas>
+</div>
+
+</div>
+
+</div>
+
+<script>
+let prob={{ probability }};
+let h=0,m=0,l=0;
+
+if(prob>=70){h=prob;m=20;l=10;}
+else if(prob>=40){m=prob;h=30;l=30;}
+else{l=100-prob;m=20;h=10;}
+
+// BAR
+new Chart(barChart,{
+type:"bar",
+data:{
+labels:["High","Medium","Low"],
+datasets:[{
+data:[h,m,l],
+backgroundColor:["#ff5252","#ffca28","#00c853"],
+borderRadius:8
+}]
+},
+options:{
+plugins:{legend:{display:false}},
+scales:{y:{beginAtZero:true,max:100}}
+}
+});
+
+// PIE
+new Chart(pieChart,{
+type:"pie",
+data:{
+labels:["High","Medium","Low"],
+datasets:[{
+data:[h,m,l],
+backgroundColor:["#ff5252","#ffca28","#00c853"]
+}]
+},
+options:{
+plugins:{legend:{position:"bottom"}}
+}
+});
+</script>
+
+{% endif %}
+
+</div>
+
+</body>
+</html>
