@@ -1,4 +1,4 @@
-flask
+Flask
 flask-cors
 mysql-connector-python
 pandas
@@ -7,5 +7,5 @@ joblib
 matplotlib
 seaborn
 scikit-learn
-xgBoost
-Python
+xgboost
+streamlit
